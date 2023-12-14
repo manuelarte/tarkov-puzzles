@@ -1,0 +1,45 @@
+alyonka:
+  - "You ned two of these to craft sugar"
+armor:
+  - "Protective gear worn by players to reduce damage from enemy attacks"
+ammo:
+  - "Ammunition for firearms, essential for engaging enemies"
+ap:
+  - "ammunition that can penetrate armor"
+boss:
+  - "A powerful NPC enemy with better loot, usually guarded by bodyguards"
+camper:
+  - "A player who waits near an extraction point to eliminate others trying to escape"
+chad:
+  - "A highly geared and aggressive player"
+  - "The opposite of a rat"
+exfil:
+  - "The act of successfully leaving a raid through an extraction point"
+extract:
+  - "A designated location on the map where players can leave the raid"
+gear:
+  - "Equipment and items that a player's character carries"
+headshot:
+  - "A shot to the head, often resulting in an instant kill"
+loot:
+  - "Items or gear found in the game that players can pick up"
+medkit:
+  - "Small item used to heal and restore health during a raid"
+pmc:
+  - "Short for Private Military Company"
+quest:
+  - "A mission or task given to players to complete for rewards"
+raid:
+  - "A gameplay session in Tarkov where players enter a map to complete objectives and collect loot"
+rat:
+  - "A player who focuses on stealth and avoiding combat rather than engaging in direct fights"
+  - "The opposite of a chad"
+scav:
+  - "Short for Scavenger"
+stash:
+  - "A hidden container where players can store items between raids"
+sugar:
+  - "You need two of these to craft a moonshine"
+  - "Sweet consumable in Tarkov with 70 points"
+wipe:
+  - "Part of the game cycle when all player progress resets"

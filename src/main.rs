@@ -1,18 +1,20 @@
 use std::collections::HashMap;
+use reqwest::Error;
 use crate::crossword::{Crossword, word};
 use crate::Square::{CharSquare, StartSquare};
+use reqwest::header::CONTENT_TYPE;
+use reqwest::header::ACCEPT;
 
-use std::io::{self, stdout};
-use crossterm::{
-    event::{self, Event, KeyCode},
-    ExecutableCommand,
-    terminal::{disable_raw_mode, enable_raw_mode, EnterAlternateScreen, LeaveAlternateScreen}
-};
-use ratatui::{prelude::*, widgets::*};
+
+use std::io::{self};
+use serde::Deserialize;
+use crate::tarkovapi::{Ammo, new_tarkov_api};
 
 mod crossword;
+mod tarkovapi;
 
-fn main() -> io::Result<()> {
+#[tokio::main]
+async fn main() -> io::Result<()> {
     println!("Hello, world!");
     println!("Creating Crossword");
     let c = crossword::build_crossword();
@@ -20,57 +22,25 @@ fn main() -> io::Result<()> {
     let crossword_size = c.get_size();
     let map = create_map(&c);
 
-    enable_raw_mode()?;
-    stdout().execute(EnterAlternateScreen)?;
-    let mut terminal = Terminal::new(CrosstermBackend::new(stdout()))?;
-
-    let mut should_quit = false;
-    while !should_quit {
-        terminal.draw(ui)?;
-        should_quit = handle_events()?;
+   let response = call().await;
+    match response {
+        Ok(r) => { println!("got response {:?}", r)}
+        Err(e) => {
+            println!("got error")
+        }
     }
 
-    disable_raw_mode()?;
-    stdout().execute(LeaveAlternateScreen)?;
     Ok(())
 
 }
 
+async fn call() -> Result<Vec<Ammo>, Error> {
+    let api = new_tarkov_api();
 
-fn handle_events() -> io::Result<bool> {
-    if event::poll(std::time::Duration::from_millis(50))? {
-        if let Event::Key(key) = event::read()? {
-            if key.kind == event::KeyEventKind::Press && key.code == KeyCode::Char('q') {
-                return Ok(true);
-            }
-        }
-    }
-    Ok(false)
+    let response = api.get_ammo().await?;
+    Ok(response)
 }
 
-fn ui(frame: &mut Frame) {
-    let main_layout = Layout::new().constraints([Constraint::Length(1), Constraint::Min(0), Constraint::Length(1)])//.direction(Layout::Direction::Vertical)
-        .split(frame.size());
-    frame.render_widget(
-        Block::new().borders(Borders::TOP).title("Title Bar"),
-        main_layout[0],
-    );
-    frame.render_widget(
-        Block::new().borders(Borders::TOP).title("Status Bar"),
-        main_layout[2],
-    );
-
-    let inner_layout = Layout::new().constraints([Constraint::Percentage(50), Constraint::Percentage(50)]).direction(Direction::Horizontal)
-        .split(main_layout[1]);
-    frame.render_widget(
-        Block::default().borders(Borders::ALL).title("Left"),
-        inner_layout[0],
-    );
-    frame.render_widget(
-        Block::default().borders(Borders::ALL).title("Right"),
-        inner_layout[1],
-    );
-}
 fn create_map(crossword: &Crossword) -> HashMap<(u8,u8), Square> {
     let mut squares: HashMap<(u8,u8), Square> = HashMap::new();
     let words = crossword.get_words();
